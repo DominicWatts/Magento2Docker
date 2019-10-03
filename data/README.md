@@ -15,7 +15,7 @@ The images are intended to be used as [data containers](https://docs.docker.com/
             volumes_from:
                 - data
         fpm:
-            image: meanbee/magento2-php:7.0-fpm
+            image: domw/magento2-php:7.0-fpm
             volumes_from:
                 - data
 

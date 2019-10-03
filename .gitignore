@@ -1,2 +1,9 @@
 /composer.env
 /magento
+/mysql/data/*
+!*.gitkeep
+/mysql/log/*
+!*.gitkeep
+/composer/cache/*
+!*.gitkeep
+/newrelic/newrelic.ini

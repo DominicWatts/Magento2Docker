@@ -1,22 +1,48 @@
 # Magento 2 Docker
 
-[![Build Status][ico-travis]][link-travis]
-[![Docker Build Status][ico-dockerbuild]][link-dockerhub]
-[![Docker Pulls][ico-downloads]][link-dockerhub]
-[![Docker Stars][ico-dockerstars]][link-dockerhub]
-
 A collection of Docker images for running Magento 2 through nginx and on the command line.
 
 ## Quick Start
 
-    cp composer.env.sample composer.env
-    # ..put the correct tokens into composer.env
+### add the following entry to OS hosts file
+127.0.0.1 magento2.docker
 
-    mkdir magento
+### put the correct tokens into composer.env
+cp composer.env.sample composer.env
 
-    docker-compose run cli magento-installer
-    docker-compose up -d
-    docker-compose restart
+mkdir magento
+
+### build
+docker-compose up -d
+
+### Install via wrapper
+docker-compose run cli magento-installer
+
+### Command line (remove once exit)
+docker-compose run --rm cli
+
+### Magento command via wrapper
+docker-compose run --rm cli magento-command cache:clean
+
+### Check instances
+docker-compose ps
+
+### Restart instances
+docker-compose restart
+
+### Optional configuring of mailhog
+
+http://magento2.docker:8025
+
+composer require mageplaza/module-smtp
+
+### Store > Configuration > Mageplaza > SMTP
+
+  -  host: mail
+  -  port: 1025
+  -  protocol: none
+  -  authentication: plain
+  -  username/password: [blank]
 
 ## Configuration
 
@@ -84,43 +110,61 @@ To clear varnish, you can use the `cli` containers `magento-command` to clear th
 
 If you need to add your own VCL, then it needs to be mounted to: `/data/varnish.vcl`.
 
-## Building
+## Creating a docker image
 
-A lot of the configuration for each image is the same, with the difference being the base image that they're extending from.  For this reason we use `php` to build the `Dockerfile` from a set of templates in `src/`.  The `Dockerfile` should still be published to the repository due to Docker Hub needing a `Dockerfile` to build from.
+Assuming your docker hub repository is `domw/magento2-php`
 
-To build all `Dockerfile`s, run the `builder.php` script in the `php:7` Docker image:<!-- Yo dawg, I heard you like Docker images... -->
+```
 
-    docker run --rm -it -v $(pwd):/src php:7 php /src/builder.php
+cd php/newrelic/7.1-fpm
 
-### Adding new images to the build config
+docker login
 
-The build configuration is controlled by the `config.json` file. Yeah element in the top level hash is a new build target, using the following syntax:
+docker build -t domw/magento2-php:7.1-fpm ./
 
-    "<target-name>": {
-        "version": "<php-version>",
-        "flavour": "<image-flavour>",
-        "files": {
-            "<target-file-name>": {
-                "<template-variable-name>": "<template-variable-value>",
-                ...
-            },
-    }
+docker push domw/magento2-php:7.1-fpm
 
-The target files will be rendered in the `<php-version>-<image-flavour>/` directory.
+```
 
-The source template for each target file is selected from the `src/` directory using the following fallback order:
+Then edit `docker-compose.yml` to load your new image
 
-1. `<target-file-name>-<php-version>-<image-flavour>`
-2. `<target-file-name>-<php-version>`
-3. `<target-file-name>-<image-flavour>`
-4. `<target-file-name>`
+```
+fpm:
+    hostname: fpm.magento2.docker
+    image: domw/magento2-php:7.1-fpm
+    restart: 'always'
+    ports:
+      - 9000
+    links:
+      - db
+    volumes_from:
+      - appdata
+    env_file:
+      - ./global.env
+```
 
-Individual templates may include other templates as partials.
+## New Relic
 
-[ico-travis]: https://img.shields.io/travis/meanbee/docker-magento2.svg?style=flat-square
-[ico-dockerbuild]: https://img.shields.io/docker/build/meanbee/magento2-php.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/docker/pulls/meanbee/magento2-php.svg?style=flat-square
-[ico-dockerstars]: https://img.shields.io/docker/stars/meanbee/magento2-php.svg?style=flat-square
+### Verify daemon
 
-[link-travis]: https://travis-ci.org/meanbee/docker-magento2
-[link-dockerhub]: https://hub.docker.com/r/meanbee/magento2-php
+ps -ef | grep newrelic-daemon
+
+### status
+
+etc/init.d/newrelic-daemon
+
+### start / stop / restart
+
+/etc/init.d/newrelic-daemon start
+
+/etc/init.d/newrelic-daemon stop
+
+/etc/init.d/newrelic-daemon restart
+
+### Config file
+
+/newrelic/newrelic.ini => /usr/local/etc/php/conf.d/newrelic.ini
+
+### run install
+
+newrelic-install install

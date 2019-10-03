@@ -41,9 +41,9 @@ echo "* * * * * www-data /usr/local/bin/php ${MAGENTO_ROOT}/update/cron.php >> $
 echo "* * * * * www-data /usr/local/bin/php ${MAGENTO_ROOT}/bin/magento setup:cron:run >> ${MAGENTO_ROOT}/var/log/setup.cron.log" >> /etc/cron.d/magento
 
 # Get rsyslog running for cron output
-touch $CRON_LOG
-echo "cron.* $CRON_LOG" > /etc/rsyslog.d/cron.conf
-service rsyslog start
+# touch $CRON_LOG
+# echo "cron.* $CRON_LOG" > /etc/rsyslog.d/cron.conf
+# service rsyslog start
 
 <?php endif ?>
 

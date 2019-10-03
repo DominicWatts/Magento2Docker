@@ -92,7 +92,7 @@ DOCKER_RUN="\
     -v $MAGENTO_DIRECTORY:/src \
     -e COMPOSER_ALLOW_SUPERUSER=1 \
     -e $CREDENTIALS \
-    meanbee/magento2-php:7.0-cli \
+    domw/magento2-php:7.0-cli \
 "
 
 # Prepare build directory
