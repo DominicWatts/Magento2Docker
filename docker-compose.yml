@@ -11,7 +11,7 @@ services:
       - db   
 
   web:
-    image: meanbee/magento2-nginx:1.9
+    image: domw/magento2-nginx:1.17
     restart: 'always'
     ports:
       - 80:80
@@ -37,7 +37,7 @@ services:
       - ./global.env
 
   db:
-    image: mariadb:10
+    image: mariadb:10.4
     restart: 'always'
     ports:
       - 3306
@@ -69,6 +69,7 @@ services:
       - db
     volumes:
       - ./composer/cache:/root/.composer/cache
+      - ./composer/auth.json:/root/.composer/auth.json
     volumes_from:
       - appdata
     env_file:
@@ -102,6 +103,7 @@ services:
       - ENABLE_SENDMAIL=false
     volumes_from:
       - appdata
+      - crondata
     links:
       - db
     env_file:
@@ -111,7 +113,11 @@ services:
     image: tianon/true
     volumes:
       - ./magento:/var/www/magento
-      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
+
+  crondata:
+    image: tianon/true
+    volumes:
+      - ./magento/var/log:/var/log/
 
   dbdata:
     image: tianon/true

@@ -65,26 +65,6 @@ class Magento_Extension_Installer
             return static::RETURN_CODE_COMPOSER_ERROR;
         }
 
-        // Create a symlink in Magento's root folder to allow access to templates
-
-        try {
-            $symlink_exists = $this->checkSymlink($this->symlink);
-        } catch (Exception $e) {
-            $this->printSymlinkMessage();
-            $this->error($e->getMessage());
-            return static::RETURN_CODE_SYMLINK_ERROR;
-        }
-
-        if (!$symlink_exists) {
-            $this->printSymlinkMessage();
-            $this->info("Creating a symlink %s...", $this->symlink);
-
-            if (!$this->createSymlink($this->extensions_dir, $this->symlink)) {
-                $this->error("Failed to create a symlink!");
-                return static::RETURN_CODE_SYMLINK_ERROR;
-            }
-        }
-
         // Configure the installed extension
         $this->info("Configuring %s with Magento...", $this->extension_name);
         if (!$this->configureModule($this->extension_name)) {

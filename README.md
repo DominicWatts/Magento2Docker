@@ -4,45 +4,77 @@ A collection of Docker images for running Magento 2 through nginx and on the com
 
 ## Quick Start
 
-### add the following entry to OS hosts file
-127.0.0.1 magento2.docker
+### Add the following entry to OS hosts file
 
-### put the correct tokens into composer.env
-cp composer.env.sample composer.env
+    127.0.0.1 magento2.docker
 
-mkdir magento
+### Put the correct tokens into composer.env
 
-### build
-docker-compose up -d
+    cp composer.env.sample composer.env
 
-### Install via wrapper
-docker-compose run cli magento-installer
+### Put the correct tokens into auth.json
+
+    cp composer/auth.sample.json composer/auth.json
+
+### Put the correct tokens into newrelic.ini
+
+    cp newrelic/newrelic.sample.ini newrelic/newrelic.ini
+
+### Create magento folder
+
+    mkdir magento
+
+### Build
+
+    docker-compose up -d
+
+### Install
+
+#### Manually
+
+Download, unzip and install magento from https://magento.com/tech-resources/download
+
+#### Install via wrapper
+
+    docker-compose run --rm li magento-installer
+
+### Create cron log file
+
+    touch magento/var/log/cron.log
 
 ### Command line (remove once exit)
-docker-compose run --rm cli
+
+    docker-compose run --rm cli
 
 ### Magento command via wrapper
-docker-compose run --rm cli magento-command cache:clean
 
+    docker-compose run --rm cli magento-command cache:clean
+    
+### Install extension via wrapper
+
+    docker-compose run --rm cli magento-extension-installer --package-name=dominicwatts/clearstatic Xigen_ClearStatic
+    
 ### Check instances
-docker-compose ps
+
+    docker-compose ps
 
 ### Restart instances
-docker-compose restart
+
+    docker-compose restart
 
 ### Optional configuring of mailhog
 
 http://magento2.docker:8025
 
-composer require mageplaza/module-smtp
+    composer require mageplaza/module-smtp
 
 ### Store > Configuration > Mageplaza > SMTP
 
-  -  host: mail
-  -  port: 1025
-  -  protocol: none
-  -  authentication: plain
-  -  username/password: [blank]
+  -  host: `mail`
+  -  port: `1025`
+  -  protocol: `none`
+  -  authentication: `plain`
+  -  username/password: `[blank]`
 
 ## Configuration
 
@@ -98,18 +130,6 @@ All images have sendmail installed for emails, however it is not enabled by defa
 
 To enable xdebug, you will need to toggle the `PHP_ENABLE_XDEBUG` environment variable to `true` in `global.env`. Then when using docker-compose you will need to restart the fpm container using `docker-compose up -d`, or stopping and starting the container.
 
-## Varnish
-
-Varnish is running out of the container by default. If you do not require varnish, then you will need to remove the varnish block from your `docker-compose.yml` and uncomment the `environment` section under the `web` container definition.
-
-To clear varnish, you can use the `cli` containers `magento-command` to clear the cache, which will include varnish. Alternatively, you could restart the varnish container.
-
-    docker-compose run --rm cli magento-command cache:flush
-    # OR
-    docker-compose restart varnish
-
-If you need to add your own VCL, then it needs to be mounted to: `/data/varnish.vcl`.
-
 ## Creating a docker image
 
 Assuming your docker hub repository is `domw/magento2-php`
@@ -147,24 +167,28 @@ fpm:
 
 ### Verify daemon
 
-ps -ef | grep newrelic-daemon
+    ps -ef | grep newrelic-daemon
 
 ### status
 
-etc/init.d/newrelic-daemon
+    /etc/init.d/newrelic-daemon status
 
 ### start / stop / restart
 
-/etc/init.d/newrelic-daemon start
+    /etc/init.d/newrelic-daemon start
 
-/etc/init.d/newrelic-daemon stop
+    /etc/init.d/newrelic-daemon stop
 
-/etc/init.d/newrelic-daemon restart
+    /etc/init.d/newrelic-daemon restart
 
 ### Config file
 
-/newrelic/newrelic.ini => /usr/local/etc/php/conf.d/newrelic.ini
+    /newrelic/newrelic.ini => /usr/local/etc/php/conf.d/newrelic.ini
 
 ### run install
 
-newrelic-install install
+    newrelic-install install
+    
+### Configure within Magento
+
+Stores > Configuration > General > New Relic Monitoring

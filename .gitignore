@@ -1,3 +1,6 @@
+/.settings
+/.vscode
+/.idea
 /composer.env
 /magento
 /mysql/data/*
@@ -7,3 +10,4 @@
 /composer/cache/*
 !*.gitkeep
 /newrelic/newrelic.ini
+/composer/auth\.json

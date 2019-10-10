@@ -1,0 +1,18 @@
+{
+    "bitbucket-oauth": {
+        "bitbucket.org": {
+            "consumer-key": "",
+            "consumer-secret": ""
+        }
+    },
+    "github-oauth": {
+        "github.com": ""
+    },
+    "gitlab-oauth": {},
+    "http-basic": {
+        "repo.magento.com": {
+            "username": "",
+            "password": ""
+        }
+    }
+}
