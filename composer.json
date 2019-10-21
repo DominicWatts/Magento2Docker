@@ -1,0 +1,15 @@
+{
+    "name": "dominicwatts/docker-magento2",
+    "description": "🐳 Docker containers with all required Magento 2 dependencies installed available as FPM through Nginx and CLI including New Relic and blackfire",
+    "type": "project",
+    "version": "1.0.0",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Dominic Xigen",
+            "email": "dominic@xigen.co.uk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

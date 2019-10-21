@@ -66,7 +66,7 @@ ENV APPNAME PHP
 
 # Install New Relic
 RUN \
-  curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.1.0.246-linux.tar.gz  | tar -C /tmp -zx && \
+  curl -L https://github.com/DominicWatts/newrelic-php-agent/raw/5-9.2.0.247/newrelic-php5-9.2.0.247-linux.tar.gz  | tar -C /tmp -zx && \
    export NR_INSTALL_USE_CP_NOT_LN=1 && \
     export NR_INSTALL_SILENT=1 && \
      /tmp/newrelic-php5-*/newrelic-install install && \

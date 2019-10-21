@@ -1,5 +1,6 @@
 version: "2"
 services:
+
   mail:
     image: mailhog/mailhog
     restart: 'always'
@@ -11,38 +12,40 @@ services:
       - db   
 
   web:
-    image: meanbee/magento2-nginx:1.9
+    image: domw/magento2-nginx:1.17
     restart: 'always'
     ports:
       - 80:80
+      - 443:443
     links:
       - fpm
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
     env_file:
       - ./global.env
 
   fpm:
     hostname: fpm.magento2.docker
-    image: meanbee/magento2-php:7.2-fpm
+    image: domw/magento2-php:7.2-fpm
     restart: 'always'
     ports:
       - 9000
     links:
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
     env_file:
       - ./global.env
 
   db:
-    image: mariadb:10
+    image: mariadb:10.4
     restart: 'always'
     ports:
       - 3306
-    volumes_from:
-      - dbdata
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
     environment:
       - MYSQL_ROOT_PASSWORD=magento2
       - MYSQL_DATABASE=magento2
@@ -64,14 +67,14 @@ services:
 
   cli:
     hostname: cli.magento2.docker
-    image: meanbee/magento2-php:7.2-cli
+    image: domw/magento2-php:7.2-cli
     links:
       - db
     volumes:
       - ./composer/cache:/root/.composer/cache
       - ./composer/auth.json:/root/.composer/auth.json
-    volumes_from:
-      - appdata
+      - ./magento:/var/www/magento
+      - ./mysql/conf:/etc/mysql/conf.d
     env_file:
       - ./global.env
       - ./composer.env
@@ -94,33 +97,16 @@ services:
       # - M2SETUP_USE_SAMPLE_DATA=true
 
   cron:
-    image: meanbee/magento2-php:7.2-cli
+    image: domw/magento2-php:7.2-cli
     hostname: magento2-cron.docker
     command: run-cron
     env_file:
       - ./global.env    
     environment:
       - ENABLE_SENDMAIL=false
-    volumes_from:
-      - appdata
-      - crondata      
-    links:
-      - db
-    env_file:
-      - ./global.env      
-
-  appdata:
-    image: tianon/true
     volumes:
       - ./magento:/var/www/magento
-
-  crondata:
-    image: tianon/true
-    volumes:
       - ./magento/var/log:/var/log/
+    links:
+      - db
 
-  dbdata:
-    image: tianon/true
-    volumes: 
-      - ./mysql/data:/var/lib/mysql
-      - ./mysql/log:/var/log/mysql

@@ -1,0 +1,12 @@
+[mysql]
+max_allowed_packet = 16M
+
+[mysqld]
+query_cache_type = 1
+query_cache_size = 32M
+tmp_table_size = 32M
+max_heap_table_size = 64M 
+table_definition_cache = 1400
+table_open_cache = 2000
+table_open_cache_instances = 16
+performance_schema = ON

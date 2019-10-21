@@ -20,6 +20,7 @@ RUN apt-get update \
     vim \ 
     default-mysql-client \ 
     git \ 
+    wget \
     libzip-dev \ 
     zip
 

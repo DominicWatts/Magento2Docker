@@ -1,0 +1,23 @@
+#!/bin/bash    
+
+export env=production
+export url=http://magento2.docker   
+export branch=master 
+export target=magento
+export username=`whoami`
+export dir="$( cd "$( dirname "$0" )" >/dev/null 2>&1 && pwd )"
+export magento="docker-compose run --rm cli magento-command"
+
+cd $dir
+
+cd ../../
+
+export current=`pwd`
+
+echo $current
+
+export checkout=${current}/checkout 
+export git=${current}/git 
+export targetDir=${current}/${target}
+
+sh deploy_magento.sh

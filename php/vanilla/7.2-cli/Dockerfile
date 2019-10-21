@@ -19,6 +19,8 @@ RUN apt-get update \
     cron \ 
     vim \
     default-mysql-client \ 
+    wget \
+    zip \    
     git
 
 # Configure the gd library

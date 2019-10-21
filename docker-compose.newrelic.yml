@@ -1,5 +1,6 @@
 version: "2"
 services:
+
   mail:
     image: mailhog/mailhog
     restart: 'always'
@@ -11,15 +12,17 @@ services:
       - db   
 
   web:
-    image: meanbee/magento2-nginx:1.9
+    image: domw/magento2-nginx:1.17
     restart: 'always'
     ports:
       - 80:80
+      - 443:443
     links:
       - fpm
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
+      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
     env_file:
       - ./global.env
 
@@ -31,18 +34,20 @@ services:
       - 9000
     links:
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
+      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
     env_file:
       - ./global.env
 
   db:
-    image: mariadb:10
+    image: mariadb:10.4
     restart: 'always'
     ports:
       - 3306
-    volumes_from:
-      - dbdata
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
     environment:
       - MYSQL_ROOT_PASSWORD=magento2
       - MYSQL_DATABASE=magento2
@@ -70,8 +75,9 @@ services:
     volumes:
       - ./composer/cache:/root/.composer/cache
       - ./composer/auth.json:/root/.composer/auth.json
-    volumes_from:
-      - appdata
+      - ./magento:/var/www/magento
+      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
+      - ./mysql/conf:/etc/mysql/conf.d
     env_file:
       - ./global.env
       - ./composer.env
@@ -101,27 +107,10 @@ services:
       - ./global.env    
     environment:
       - ENABLE_SENDMAIL=false
-    volumes_from:
-      - appdata
-      - crondata
-    links:
-      - db
-    env_file:
-      - ./global.env      
-
-  appdata:
-    image: tianon/true
     volumes:
       - ./magento:/var/www/magento
       - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
-  
-  crondata:
-    image: tianon/true
-    volumes:
       - ./magento/var/log:/var/log/
+    links:
+      - db
 
-  dbdata:
-    image: tianon/true
-    volumes: 
-      - ./mysql/data:/var/lib/mysql
-      - ./mysql/log:/var/log/mysql

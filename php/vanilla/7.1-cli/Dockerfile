@@ -18,6 +18,8 @@ RUN apt-get update \
     sudo \ 
     cron \ 
     default-mysql-client \ 
+    wget \
+    zip \    
     vim \
     git
 

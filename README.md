@@ -4,6 +4,10 @@ A collection of Docker images for running Magento 2 through nginx and on the com
 
 ## Quick Start
 
+### Install
+
+`composer create-project dominicwatts/docker-magento2 ./`
+
 ### Add the following entry to OS hosts file
 
     127.0.0.1 magento2.docker
@@ -192,3 +196,47 @@ fpm:
 ### Configure within Magento
 
 Stores > Configuration > General > New Relic Monitoring
+
+## Deployment
+
+This is experimental method to get docker web root up to date with git remote
+
+cd git
+
+git init --bare
+
+Configure remote
+
+    ssh://user@127.0.0.1:22/path/to/remote/git
+
+push branch to remote
+
+### Confirm post-receive hook details
+
+`/git/hooks/post-receive`
+
+#### Test hook
+
+sudo chmod 777 ./magento -R
+
+    Wide open for local development only
+
+sh git/hooks/post-receive
+
+This triggers deploy_magento.sh with variables set in hook
+
+#### If process gets stuck
+
+rm deploy.lock
+
+## Stack Problems
+
+MySQL cannot connect error prior to magento install
+
+    docker-compose down -v
+
+    rm mysql/data -R 
+   
+    docker-compose up -d
+
+Wait a few mins whilst db initialise

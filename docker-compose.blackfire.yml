@@ -1,5 +1,6 @@
 version: "2"
 services:
+
   mail:
     image: mailhog/mailhog
     restart: 'always'
@@ -15,11 +16,12 @@ services:
     restart: 'always'
     ports:
       - 80:80
+      - 443:443
     links:
       - fpm
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
     env_file:
       - ./global.env
 
@@ -31,8 +33,8 @@ services:
       - 9000
     links:
       - db
-    volumes_from:
-      - appdata
+    volumes:
+      - ./magento:/var/www/magento
     env_file:
       - ./global.env
 
@@ -41,8 +43,9 @@ services:
     restart: 'always'
     ports:
       - 3306
-    volumes_from:
-      - dbdata
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
     environment:
       - MYSQL_ROOT_PASSWORD=magento2
       - MYSQL_DATABASE=magento2
@@ -70,8 +73,8 @@ services:
     volumes:
       - ./composer/cache:/root/.composer/cache
       - ./composer/auth.json:/root/.composer/auth.json
-    volumes_from:
-      - appdata
+      - ./magento:/var/www/magento
+      - ./mysql/conf:/etc/mysql/conf.d
     env_file:
       - ./global.env
       - ./composer.env
@@ -101,9 +104,9 @@ services:
       - ./global.env    
     environment:
       - ENABLE_SENDMAIL=false
-    volumes_from:
-      - appdata
-      - crondata
+    volumes:
+      - ./magento:/var/www/magento
+      - ./magento/var/log:/var/log/
     links:
       - db
     env_file:
@@ -114,19 +117,3 @@ services:
     environment:
         - BLACKFIRE_SERVER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
         - BLACKFIRE_SERVER_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  appdata:
-    image: tianon/true
-    volumes:
-      - ./magento:/var/www/magento
-
-  crondata:
-    image: tianon/true
-    volumes:
-      - ./magento/var/log:/var/log/
-
-  dbdata:
-    image: tianon/true
-    volumes: 
-      - ./mysql/data:/var/lib/mysql
-      - ./mysql/log:/var/log/mysql
