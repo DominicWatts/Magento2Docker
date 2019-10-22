@@ -243,9 +243,11 @@ Wait a few mins whilst db initialise
 
 ## Useful Alias's
 
+```
 alias cli='docker-compose run --rm cli'
 alias magento-command='docker-compose run --rm cli magento-command'
 alias dcud='docker-compose up -d'
 alias dcdv='docker-compose down -v'
 alias dreload='docker-compose down -v; docker-compose pull; docker-compose up -d'
 alias installer='docker-compose run --rm cli magento-extension-installer'
+```
