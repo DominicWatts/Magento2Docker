@@ -226,7 +226,7 @@ class Magento_Extension_Installer
             }
         }
 
-        return $this->composer("require $package_name ", $destination_dir);
+        return $this->composer("require $package_name -v", $destination_dir);
     }
 
     /**
