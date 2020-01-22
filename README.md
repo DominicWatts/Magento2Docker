@@ -4,53 +4,79 @@ A collection of Docker images for running Magento 2 through nginx and on the com
 
 ## Quick Start
 
-### Install
+`quickstart.sh` covers steps 3 through to 8
 
-`composer create-project dominicwatts/docker-magento2 ./`
+### 1 Install
 
-### Add the following entry to OS hosts file
+    composer create-project dominicwatts/docker-magento2 ./
+    
+Or
+
+    git clone git@github.com:DominicWatts/docker-magento2.git ./
+
+### 2 Add the following entry to OS hosts file
 
     127.0.0.1 magento2.docker
 
-### Put the correct tokens into composer.env
+### 3 Put the correct tokens into composer.env
 
     cp composer.env.sample composer.env
+    
+Edit composer.env with correct environment variables    
 
-### Put the correct tokens into auth.json
+### 4 Put the correct tokens into auth.json
 
     cp composer/auth.sample.json composer/auth.json
 
-### Put the correct tokens into newrelic.ini
+### 5 Put the correct tokens into newrelic.ini
 
     cp newrelic/newrelic.sample.ini newrelic/newrelic.ini
 
-### Create magento folder
+### 6 Create magento folder
 
     mkdir magento
+    
+### 7 Create cron log file
 
-### Build
+    touch magento/var/log/cron.log    
+
+### 8 Build
 
     docker-compose up -d
 
-### Install
+### 9 Install
 
-#### Manually
+#### 9. 1 Install Manually
 
 Download, unzip and install magento from https://magento.com/tech-resources/download
 
-#### Install via wrapper
+Magento goes inside `./magento`
 
-    docker-compose run --rm li magento-installer
+Then run command line install or web install
 
-### Create cron log file
+##### CLI
 
-    touch magento/var/log/cron.log
+     docker-compose run --rm cli magento-command setup:install --admin-firstname Admin --admin-lastname User --admin-email dominic@xigen.co.uk --admin-user admin --admin-password test123 --base-url http://magento2.docker/ --backend-frontname xpanel --db-host db --db-name magento2 --db-user magento2 --db-password magento2 --language en_GB --currency GBP --timezone UTC --use-rewrites 1 --session-save files
+     
+##### Web
+
+    http://magento2.docker/setup/
+
+#### 9.2 Install via wrapper
+
+    docker-compose run --rm cli magento-installer
+    
+This will attempt to install via composer if magento folder is empty (time consuming)
+
+## Useful commands
 
 ### Command line (remove once exit)
 
     docker-compose run --rm cli
 
 ### Magento command via wrapper
+
+    docker-compose run --rm cli magento-command
 
     docker-compose run --rm cli magento-command cache:clean
     
@@ -60,13 +86,15 @@ Download, unzip and install magento from https://magento.com/tech-resources/down
     
 ### Check instances
 
+    docker ps
+
     docker-compose ps
 
 ### Restart instances
 
     docker-compose restart
 
-### Optional configuring of mailhog
+## Optional configuring of mailhog
 
 http://magento2.docker:8025
 
@@ -97,7 +125,7 @@ Configuration is driven through environment variables.  A comprehensive list of 
 * `PHP_ENABLE_XDEBUG` - When set to `true` it will include the Xdebug ini file as part of the PHP configuration, turning it on. It's recommended to only switch this on when you need it as it will slow down the application.
 * `UPDATE_UID_GID` - If this is set to "true" then the uid and gid of `www-data` will be modified in the container to match the values on the mounted folders.  This seems to be necessary to work around virtualbox issues on OSX.
 
-A sample `docker-compose.yml` is provided in this repository.
+A series of sample `docker-compose.yml` files are is the repo
 
 ## CLI Usage
 
