@@ -4,7 +4,7 @@ A collection of Docker images for running Magento 2 through nginx and on the com
 
 ## Quick Start
 
-`quickstart.sh` covers steps 3 through to 8
+`quickstart.sh` covers steps 3 through to 8 with default config
 
 ### 1 Install
 
@@ -43,6 +43,14 @@ Edit composer.env with correct environment variables
 ### 8 Build
 
     docker-compose up -d
+
+Or using specific config, for example:
+
+    docker-compose -f docker-compose.src.71 up -d
+
+    docker-compose -f docker-compose.src.72.yml run --rm cli
+
+    docker-compose -f docker-compose.src.73.yml run --rm cli magento-command
 
 ### 9 Install
 
