@@ -22,13 +22,12 @@ services:
       - db
     volumes:
       - ./magento:/var/www/magento
-      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
     env_file:
       - ./global.env
 
   fpm:
     hostname: fpm.magento2.docker
-    image: domw/magento2-php-newrelic:7.2-fpm
+    image: domw/magento2-php:7.2-fpm
     restart: 'always'
     ports:
       - 9000
@@ -36,7 +35,6 @@ services:
       - db
     volumes:
       - ./magento:/var/www/magento
-      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
     env_file:
       - ./global.env
 
@@ -69,14 +67,13 @@ services:
 
   cli:
     hostname: cli.magento2.docker
-    image: domw/magento2-php-newrelic:7.2-cli
+    image: domw/magento2-php:7.2-cli
     links:
       - db
     volumes:
       - ./composer/cache:/root/.composer/cache
       - ./composer/auth.json:/root/.composer/auth.json
       - ./magento:/var/www/magento
-      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
       - ./mysql/conf:/etc/mysql/conf.d
     env_file:
       - ./global.env
@@ -100,7 +97,7 @@ services:
       # - M2SETUP_USE_SAMPLE_DATA=true
 
   cron:
-    image: domw/magento2-php-newrelic:7.2-cli
+    image: domw/magento2-php:7.2-cli
     hostname: magento2-cron.docker
     command: run-cron
     env_file:
@@ -109,8 +106,21 @@ services:
       - ENABLE_SENDMAIL=false
     volumes:
       - ./magento:/var/www/magento
-      - ./newrelic/newrelic.ini:/usr/local/etc/php/conf.d/newrelic.ini
       - ./magento/var/log:/var/log/
     links:
       - db
 
+  elasticsearch:
+    image: elasticsearch:6.8.6
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elasticsearchdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200

@@ -24,3 +24,5 @@
 /git/refs
 /checkout/*
 !/checkout/.gitkeep
+/elasticsearchdata/*
+!/elasticsearchdata/.gitkeep
