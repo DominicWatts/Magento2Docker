@@ -172,25 +172,37 @@ To enable xdebug, you will need to toggle the `PHP_ENABLE_XDEBUG` environment va
 
 ## Creating a docker image
 
+### New Relic image
+
+Assuming your docker hub repository is `domw/magento2-php-newrelic`
+
+    cd php/newrelic/7.1-fpm
+    
+    docker login
+
+    docker build -t domw/magento2-php-newrelic:7.1-fpm ./
+
+    docker push domw/magento2-php-newrelic:7.1-fpm
+
+### Vanilla Image
+
 Assuming your docker hub repository is `domw/magento2-php`
 
-```
+    cd php/src/7.2-fpm
+    
+    docker login
 
-cd php/newrelic/7.1-fpm
+    docker build -t domw/magento2-php:7.2-fpm ./
 
-docker login
+    docker push domw/magento2-php:7.2-fpm
 
-docker build -t domw/magento2-php:7.1-fpm ./
-
-docker push domw/magento2-php:7.1-fpm
-
-```
+### docker-compose
 
 Then edit `docker-compose.yml` to load your new image
 
 ```
 fpm:
-    hostname: fpm.magento2.docker
+    hostname: magento2.docker
     image: domw/magento2-php:7.1-fpm
     restart: 'always'
     ports:
