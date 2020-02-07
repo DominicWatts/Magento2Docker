@@ -20,6 +20,7 @@ services:
     links:
       - fpm
       - db
+      - search
     volumes:
       - ./magento:/var/www/magento
     env_file:
@@ -33,6 +34,7 @@ services:
       - 9000
     links:
       - db
+      - search      
     volumes:
       - ./magento:/var/www/magento
     env_file:
@@ -110,17 +112,15 @@ services:
     links:
       - db
 
-  elasticsearch:
+  search:
     image: elasticsearch:6.8.6
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - discovery.type=single-node
     volumes:
       - ./elasticsearchdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+      - 9300:9300

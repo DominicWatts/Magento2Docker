@@ -215,6 +215,35 @@ fpm:
       - ./global.env
 ```
 
+## Elastic Search
+
+```
+  search:
+    image: elasticsearch:6.8.6
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    volumes:
+      - ./elasticsearchdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+```
+
+To configure Magento to use Elasticsearch:
+
+    Log in to the Magento Admin
+
+    Stores > Settings > Configuration > Catalog > Catalog > Catalog Search.
+
+    From the Search Engine list, select the correct Elasticsearch version 6. 
+    
+    Elasticsearch Server Hostname: search
+
+    Elasticsearch Server Port: 9200
+
 ## New Relic
 
 ### Verify daemon
