@@ -10,3 +10,4 @@ table_definition_cache = 1400
 table_open_cache = 2000
 table_open_cache_instances = 16
 performance_schema = ON
+sql-mode = ''
