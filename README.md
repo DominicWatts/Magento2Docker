@@ -46,7 +46,7 @@ Edit composer.env with correct environment variables
 
 Or using specific config, for example:
 
-    docker-compose -f docker-compose.src.71 up -d
+    docker-compose -f docker-compose.src.71.yml up -d
 
     docker-compose -f docker-compose.src.72.yml run --rm cli
 
