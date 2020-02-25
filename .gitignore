@@ -26,3 +26,5 @@
 !/checkout/.gitkeep
 /elasticsearchdata/*
 !/elasticsearchdata/.gitkeep
+/*.sql
+/*.tar.gz
