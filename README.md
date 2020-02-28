@@ -56,6 +56,18 @@ Or using specific config, for example:
 
 #### 9. 1 Install Manually
 
+##### Manually 
+
+###### Hypernode
+
+    wget -qO- https://magento.mirror.hypernode.com/releases/magento2-latest.tar.gz | tar xfz -
+    
+or
+
+    wget -qO- https://magento.mirror.hypernode.com/releases/magento-2.3.4.tar.gz | tar xfz -
+
+###### Download
+
 Download, unzip and install magento from https://magento.com/tech-resources/download
 
 Magento goes inside `./magento`
