@@ -28,3 +28,4 @@
 !/elasticsearchdata/.gitkeep
 /*.sql
 /*.tar.gz
+/docker-compose.yml
