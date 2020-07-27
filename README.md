@@ -244,6 +244,20 @@ fpm:
       - 9300:9300
 ```
 
+## Elastic Search Monitor
+
+```
+  kibana:
+    image: elastic/kibana:6.8.6
+    links:
+      - search
+    environment:
+      - SERVER_NAME=search:9200
+      - ELASTICSEARCH_HOSTS=http://search:9200    
+    ports:
+      - 5601:5601
+```
+
 To configure Magento to use Elasticsearch:
 
     Log in to the Magento Admin
@@ -255,6 +269,24 @@ To configure Magento to use Elasticsearch:
     Elasticsearch Server Hostname: search
 
     Elasticsearch Server Port: 9200
+
+
+### Debugging
+
+    http://10.10.1.49:9200/
+
+    http://10.10.1.49:9200/_cluster/health
+
+    http://10.10.1.49:9200/_cat/nodes?v&pretty
+    
+    http://10.10.1.49:9200/_cat/indices?v&pretty
+    
+Note: search reindex creates magento2_product_1_vx indices
+
+    - magento2_product_1_v1
+    - magento2_product_1_v2
+    
+etc
 
 ## New Relic
 
