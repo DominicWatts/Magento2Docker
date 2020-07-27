@@ -229,6 +229,8 @@ fpm:
 
 ## Elastic Search
 
+### ES Service
+
 ```
   search:
     image: elasticsearch:6.8.6
@@ -244,7 +246,7 @@ fpm:
       - 9300:9300
 ```
 
-## Elastic Search Monitor
+### ES Monitor (Kibana)
 
 ```
   kibana:
@@ -257,6 +259,10 @@ fpm:
     ports:
       - 5601:5601
 ```
+
+Notes: kibana:6.x compatible with 6.x ES
+
+### ES with Magento
 
 To configure Magento to use Elasticsearch:
 
@@ -271,15 +277,15 @@ To configure Magento to use Elasticsearch:
     Elasticsearch Server Port: 9200
 
 
-### Debugging
+### ES Debugging
 
-    http://10.10.1.49:9200/
+    http://magento2.docker:9200/
 
-    http://10.10.1.49:9200/_cluster/health
+    http://magento2.docker:9200/_cluster/health
 
-    http://10.10.1.49:9200/_cat/nodes?v&pretty
+    http://magento2.docker:9200/_cat/nodes?v&pretty
     
-    http://10.10.1.49:9200/_cat/indices?v&pretty
+    http://magento2.docker:9200/_cat/indices?v&pretty
     
 Note: search reindex creates magento2_product_1_vx indices
 
